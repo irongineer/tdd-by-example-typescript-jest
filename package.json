@@ -5,7 +5,8 @@
   "scripts": {
     "build": "npx tsc",
     "watch": "npx tsc -w",
-    "test": "jest",
+    "test": "npm-run-all test:watch",
+    "test:watch": "npx jest --watch --coverage",
     "check-types": "npx tsc --noEmit",
     "eslint": "npx eslint './**/*.ts{,x}'",
     "eslint:fix": "npx eslint './**/*.ts{,x}' --fix",
