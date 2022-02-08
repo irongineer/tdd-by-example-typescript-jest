@@ -1,12 +1,10 @@
 import { Dollar } from '../Dollar';
 
 describe('Money.ts', () => {
-  it('Multiplication', () => {
+  it('Multiplies', () => {
     const five = new Dollar(5);
-    let product: Dollar = five.times(2);
-    expect(product.amount).toBe(10);
-    product = five.times(3);
-    expect(product.amount).toBe(15);
+    expect(five.times(2)).toStrictEqual(new Dollar(10));
+    expect(five.times(3)).toStrictEqual(new Dollar(15));
   });
 
   it('Equals', () => {
