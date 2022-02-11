@@ -27,4 +27,9 @@ describe('Money.ts', () => {
       expect(new Franc(5).equals(new Franc(6))).toBeFalsy();
     });
   });
+  describe('Dollar - Franc', () => {
+    it('Do not equal', () => {
+      expect(new Dollar(5).equals(new Franc(5))).toBeFalsy();
+    });
+  });
 });
