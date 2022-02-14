@@ -30,5 +30,10 @@ describe('Money.ts', () => {
     it('Do not equal', () => {
       expect(Money.dollar(5).equals(Money.franc(5))).toBeFalsy();
     });
+
+    it('Currency', () => {
+      expect(Money.dollar(1).currency()).toBe('USD');
+      expect(Money.franc(1).currency()).toBe('CHF');
+    });
   });
 });
