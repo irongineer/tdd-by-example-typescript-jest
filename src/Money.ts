@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable max-classes-per-file */
-export abstract class Money {
+export class Money {
   constructor(protected amount: number, protected _currency: string) {}
 
-  abstract times(multiplier: number): Money;
+  times(multiplier: number): Money {
+    return new Money(this.amount * multiplier, this._currency);
+  }
 
   currency(): string {
     return this._currency;
@@ -11,10 +13,7 @@ export abstract class Money {
 
   public equals(object: object): boolean {
     const money = object as Money;
-    return (
-      this.amount === money.amount &&
-      this.constructor.name === money.constructor.name
-    );
+    return this.amount === money.amount && this.currency() === money.currency();
   }
 
   static dollar(amount: number): Money {
@@ -34,10 +33,6 @@ export class Dollar extends Money {
   currency(): string {
     return this._currency;
   }
-
-  times(multiplier: number): Money {
-    return Money.dollar(this.amount * multiplier);
-  }
 }
 
 export class Franc extends Money {
@@ -47,9 +42,5 @@ export class Franc extends Money {
 
   currency(): string {
     return this._currency;
-  }
-
-  times(multiplier: number): Money {
-    return Money.franc(this.amount * multiplier);
   }
 }
