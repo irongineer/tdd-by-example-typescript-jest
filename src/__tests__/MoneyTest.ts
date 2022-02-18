@@ -1,6 +1,14 @@
+import { Bank } from '../Bank';
 import { Money } from '../Money';
 
 describe('Money.ts', () => {
+  it('Simple Addition', () => {
+    const five = Money.dollar(5);
+    const sum = five.plus(five);
+    const bank = new Bank();
+    const reduced = bank.reduce(sum, 'USD');
+    expect(reduced).toEqual(Money.dollar(10));
+  });
   it('Multiplication', () => {
     const five = Money.dollar(5);
     expect(five.times(2)).toEqual(Money.dollar(10));
