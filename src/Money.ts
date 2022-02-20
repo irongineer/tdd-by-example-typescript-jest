@@ -1,30 +1,38 @@
+/* eslint-disable max-classes-per-file */
 /* eslint-disable @typescript-eslint/no-use-before-define */
 
-import { Expression } from './Expression';
-
-/* eslint-disable max-classes-per-file */
 export class Money implements Expression {
-  constructor(protected amount: number, protected _currency: string) {}
+  constructor(protected _amount: number, protected _currency: string) {}
 
   plus(addend: Money): Expression {
-    return new Money(this.amount + addend.amount, this._currency);
+    return new Sum(this, addend);
   }
 
   times(multiplier: number): Money {
-    return new Money(this.amount * multiplier, this._currency);
+    return new Money(this._amount * multiplier, this._currency);
+  }
+
+  amount(): number {
+    return this._amount;
   }
 
   currency(): string {
     return this._currency;
   }
 
+  public reduce(to: string) {
+    return this;
+  }
+
   public equals(object: object): boolean {
     const money = object as Money;
-    return this.amount === money.amount && this.currency() === money.currency();
+    return (
+      this._amount === money._amount && this.currency() === money.currency()
+    );
   }
 
   public toString(): string {
-    return `amount: ${this.amount} / currency: ${this._currency}`;
+    return `amount: ${this._amount} / currency: ${this._currency}`;
   }
 
   static dollar(amount: number): Money {
@@ -33,5 +41,18 @@ export class Money implements Expression {
 
   static franc(amount: number): Money {
     return new Money(amount, 'CHF');
+  }
+}
+
+export interface Expression {
+  reduce(to: string): Money;
+}
+
+export class Sum implements Expression {
+  constructor(public augend: Money, public addend: Money) {}
+
+  public reduce(to: string): Money {
+    const amount = this.augend.amount() + this.addend.amount();
+    return new Money(amount, to);
   }
 }
