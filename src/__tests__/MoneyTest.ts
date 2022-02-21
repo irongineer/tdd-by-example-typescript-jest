@@ -1,8 +1,23 @@
-import { Bank } from '../Bank';
-import { Money, Sum } from '../Money';
+import { Money, Sum, Bank } from '../Money';
 
 describe('Money.ts', () => {
-  it('Simple Addition', () => {
+  it('Multiplication', () => {
+    const five = Money.dollar(5);
+    expect(five.times(2)).toEqual(Money.dollar(10));
+    expect(five.times(3)).toEqual(Money.dollar(15));
+  });
+
+  it('Equality', () => {
+    expect(Money.dollar(5).equals(Money.dollar(5))).toBeTruthy();
+    expect(Money.dollar(5).equals(Money.dollar(6))).toBeFalsy();
+  });
+
+  it('Currency', () => {
+    expect(Money.dollar(1).currency()).toBe('USD');
+    expect(Money.franc(1).currency()).toBe('CHF');
+  });
+
+  it('Simple addition', () => {
     const five = Money.dollar(5);
     const sum = five.plus(five);
     const bank = new Bank();
@@ -10,7 +25,7 @@ describe('Money.ts', () => {
     expect(reduced).toEqual(Money.dollar(10));
   });
 
-  it('Plus returns sum', () => {
+  it('Plus returns Sum', () => {
     const five = Money.dollar(5);
     const result = five.plus(five);
     const sum = result as Sum;
@@ -31,19 +46,14 @@ describe('Money.ts', () => {
     expect(result).toEqual(Money.dollar(1));
   });
 
-  it('Multiplication', () => {
-    const five = Money.dollar(5);
-    expect(five.times(2)).toEqual(Money.dollar(10));
-    expect(five.times(3)).toEqual(Money.dollar(15));
+  it('Reduce Money different currency', () => {
+    const bank = new Bank();
+    bank.addRate('CHF', 'USD', 2);
+    const result = bank.reduce(Money.franc(2), 'USD');
+    expect(result).toEqual(Money.dollar(1));
   });
 
-  it('Equality', () => {
-    expect(Money.dollar(5).equals(Money.dollar(5))).toBeTruthy();
-    expect(Money.dollar(5).equals(Money.dollar(6))).toBeFalsy();
-  });
-
-  it('Currency', () => {
-    expect(Money.dollar(1).currency()).toBe('USD');
-    expect(Money.franc(1).currency()).toBe('CHF');
+  it('Identity rate', () => {
+    expect(new Bank().rate('USD', 'USD')).toBe(1);
   });
 });
