@@ -1,4 +1,4 @@
-import { Money, Sum, Bank } from '../Money';
+import { Money, Sum, Bank, Expression } from '../Money';
 
 describe('Money.ts', () => {
   it('Multiplication', () => {
@@ -55,5 +55,14 @@ describe('Money.ts', () => {
 
   it('Identity rate', () => {
     expect(new Bank().rate('USD', 'USD')).toBe(1);
+  });
+
+  it('Mixed addition', () => {
+    const fiveBucks: Expression = Money.dollar(5);
+    const tenFrancs: Expression = Money.franc(10);
+    const bank = new Bank();
+    bank.addRate('CHF', 'USD', 2);
+    const result = bank.reduce(fiveBucks.plus(tenFrancs), 'USD');
+    expect(result).toEqual(Money.dollar(10));
   });
 });

@@ -6,20 +6,20 @@ import { pair } from './Pair';
 export class Money implements Expression {
   constructor(protected _amount: number, protected _currency: string) {}
 
-  plus(addend: Money): Expression {
-    return new Sum(this, addend);
-  }
-
-  times(multiplier: number): Money {
-    return new Money(this._amount * multiplier, this._currency);
-  }
-
   amount(): number {
     return this._amount;
   }
 
   currency(): string {
     return this._currency;
+  }
+
+  times(multiplier: number): Expression {
+    return new Money(this._amount * multiplier, this._currency);
+  }
+
+  public plus(addend: Expression): Expression {
+    return new Sum(this, addend);
   }
 
   public reduce(bank: Bank, to: string) {
@@ -48,14 +48,21 @@ export class Money implements Expression {
 }
 
 export interface Expression {
+  plus(addend: Expression): Expression;
   reduce(bank: Bank, to: string): Money;
 }
 
 export class Sum implements Expression {
-  constructor(public augend: Money, public addend: Money) {}
+  constructor(public augend: Expression, public addend: Expression) {}
+
+  public plus(addend: Expression): Expression {
+    return addend; // TODO: Fix later
+  }
 
   public reduce(bank: Bank, to: string): Money {
-    const amount = this.augend.amount() + this.addend.amount();
+    const amount =
+      this.augend.reduce(bank, to).amount() +
+      this.addend.reduce(bank, to).amount();
     return new Money(amount, to);
   }
 }
