@@ -1,5 +1,5 @@
 {
-  "name": "tdd-typescript-jest",
+  "name": "tdd-by-example-typescript-jest",
   "version": "1.0.0",
   "description": "Trace the testing code of the book \"Test Driven Development: By Example\" with TypeScript & Jest",
   "scripts": {
