@@ -14,7 +14,7 @@ export class Money implements Expression {
     return this._currency;
   }
 
-  times(multiplier: number): Expression {
+  public times(multiplier: number): Expression {
     return new Money(this._amount * multiplier, this._currency);
   }
 
@@ -48,6 +48,7 @@ export class Money implements Expression {
 }
 
 export interface Expression {
+  times(multiplier: number): Expression;
   plus(addend: Expression): Expression;
   reduce(bank: Bank, to: string): Money;
 }
@@ -55,8 +56,15 @@ export interface Expression {
 export class Sum implements Expression {
   constructor(public augend: Expression, public addend: Expression) {}
 
+  public times(multiplier: number): Expression {
+    return new Sum(
+      this.augend.times(multiplier),
+      this.addend.times(multiplier),
+    );
+  }
+
   public plus(addend: Expression): Expression {
-    return addend; // TODO: Fix later
+    return new Sum(this, addend);
   }
 
   public reduce(bank: Bank, to: string): Money {
